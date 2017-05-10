@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>IS41 Kadai01</title>
+    <link rel="stylesheet" href="./layout.css">
+  </head>
+
+  <body>
+
+    <h2>変換元</h2>
+    <p><textarea id="now" cols="75" rows="10"></textarea></p>
+    <p><button onclick="colorEncryption()">暗号化</button></p>
+
+    <h2>暗号文</h2>
+    <div id="result_color"></div>
+    <p><button onclick="decryption()">復号化</button></p>
+
+    <h2>元どおり</h2>
+    <p><textarea id="base" cols="75" rows="10"></textarea></p>
+
+    <p><button onclick="clear()">クリア</button></p>
+
+    <script src="./tranc.js"></script>
+  </body>
+</html>
