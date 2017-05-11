@@ -1,49 +1,62 @@
 var transBasicText;
+var resultColor = document.getElementById("result_color");  //色を表示するための領域
+var colors = [];
 
 //Add span tag every number of color.
 function colorEncryption() {
   var traText = document.getElementById("now").value;  //暗号化対象文字列
   var textBytes = string_to_utf8_hex_string(traText);  //8gjns81u8ab -> a8982798097d84780180970986983710972f74918697647910
-  var colors = transColor(textBytes);  //['#982792', '#987329', '#980502', ...]
-  var resultColor = document.getElementById("result_color");  //色を表示するための領域
-  var addSpan = [];
-  var addSpanTag = [];
   var mod;
 
-  for(var i = 0; i < colors.length; i++) {
+  colors = transColor(textBytes);  //['#982792', '#987329', '#980502', ...]
 
-    if(colors[i].length != 7){
+  for(var i = 0; i < colors.length; i++) {
+    if(colors[i].length != 7 && colors[i].length > 4 && colors[i].length < 7){
       mod = 7 - colors[i].length;
 
       for(var c = 0; c < mod; c++) {
-        colors[c] += '0';
+        colors[i] += '0';
       }
     }
 
-    if(colors[i].length != 4) {
+    if(colors[i].length != 4 && colors[i].length < 4) {
       mod = 4 - colors[i].length;
 
       for(var c = 0; c < mod; c++) {
-        colors[c] += '0';
+        colors[i] += '0';
       }
     }
   }
 
-  for(var i = 0; i < colors.length; i++) {
-    addSpan[i] = document.createElement("span");
-    addSpanTag[i] = document.createTextNode(colors[i]);
-    addSpan[i].appendChild(addSpanTag[i])
-    resultColor.appendChild(addSpan[i]);
-  }
-
-  var spanArray = document.getElementsByTagName("span");
-
-  for(var i = 0; i < spanArray.length; i++) {
-    spanArray[i].style.color = colors[i];
-    spanArray[i].style.backgroundColor = colors[i];
-  }
+  addSpanTag(colors);
 
   transBasicText = utf8_hex_string_to_string(textBytes);  //元の文章に戻した文字列
+}
+
+function addSpanTag(colors) {
+  var addSpan = [];
+  var addSpanTag = [];
+  var spanArray = [];
+
+  for(var i = 0; i < colors.length; i++) {
+
+    addSpan[i] = document.createElement("span");
+    addSpanTag[i] = document.createTextNode(colors[i]);
+    addSpan[i].appendChild(addSpanTag[i]);
+    resultColor.appendChild(addSpan[i]);
+
+    if(i == colors.length - 1) {
+      addSpan[i] = document.createElement("br");
+      resultColor.appendChild(addSpan[i]);
+    }
+  }
+
+  spanArray = document.getElementsByTagName("span");
+
+  for(var i = spanArray.length - 1, j = 0; j < colors.length; i--, j++) {
+    spanArray[i].style.color = colors[j];
+    spanArray[i].style.backgroundColor = colors[j];
+  }
 }
 
 //Translation to color code.
@@ -85,6 +98,7 @@ function string_to_utf8_hex_string(text) {
 function utf8_hex_string_to_string(hex_str1) {
   var bytes2 = hex_string_to_bytes(hex_str1);
   var str2 = utf8_bytes_to_string(bytes2);
+
   return str2;
 }
 
@@ -92,7 +106,7 @@ function string_to_utf8_bytes(text) {
   var result = [];
 
   if(text == null) {
-    return text;
+    return result;
   }
 
   for(var i = 0; i < text.length; i++) {
@@ -100,7 +114,7 @@ function string_to_utf8_bytes(text) {
 
     if(stringToChar <= 0x7f) {
       result.push(stringToChar);
-    } else if(stringToChar <= 0x7ff) {
+    } else if(stringToChar <= 0x07ff) {
       result.push(((stringToChar >> 6) & 0x1F) | 0xC0);
       result.push((stringToChar & 0x3F) | 0x80);
     } else {
@@ -179,6 +193,7 @@ function hex_to_byte(hex_str) {
 
 function splitByLength(str, length) {
   var resultArr = [];
+
   if (!str || !length || length < 1) {
     return resultArr;
   }
